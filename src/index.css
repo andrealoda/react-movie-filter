@@ -14,12 +14,13 @@ body {
 .container {
   width: 100%;
   max-width: 1200px;
-  margin-inline: auto;
-  padding-inline: 1.2rem;
+  height:  100vh;
+  margin: auto;
+  padding: 1.2rem;
+  border: 1px solid lightgray;
 }
 
-.flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+h1 {
+  text-align: center;
+  margin: 1rem 0;
 }
