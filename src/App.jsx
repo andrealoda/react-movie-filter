@@ -16,6 +16,20 @@ function App() {
   const [filteredList, setFilteredList] = useState(allTitles)
 
 
+  function handleSelection(userSelection) {
+    setSelectedGenre(userSelection)
+  }
+
+  useEffect(() => {
+
+    if (selectedGenre === "" || selectedGenre === "all") {
+      setFilteredList(allTitles)
+    } else {
+      setFilteredList(allTitles.filter(item => item.genre === selectedGenre))
+    }
+  }, [selectedGenre])
+
+
   return (
     <>
       <div className="container">
@@ -27,16 +41,23 @@ function App() {
         </header>
 
         <main>
-          <label for="pet-select">Choose a genre to filter the following list: </label>
+          <h2>Choose a genre to filter the following list: </h2>
 
-          <select name="movie-genre-filter" id="movie-genre-filter">
+          <select name="movie-genre-filter" id="movie-genre-filter" onChange={e => handleSelection(e.target.value)}>
             <option value="">--Please choose an option--</option>
-            <option value="all">All titles</option>
             <option value="Fantascienza">Fantascienza</option>
             <option value="Thriller">Thriller</option>
             <option value="Romantico">Romantico</option>
             <option value="Azione">Azione</option>
+            <option value="all">All titles</option>
+
           </select>
+
+          <ul>
+            {filteredList.map(item =>
+              <li key={item.title}>{item.title}</li>
+            )}
+          </ul>
         </main>
 
       </div>
