@@ -27,11 +27,11 @@ function App() {
 
   useEffect(() => {
     // console.log(genre);
-    let filteredData = initialMovies
+    let filteredData = movies
 
     if (genre) {
       // console.log('Filtered by genre');
-      filteredData = initialMovies.filter(movie => movie.genre.toLowerCase() == genre.toLowerCase()
+      filteredData = movies.filter(movie => movie.genre.toLowerCase() == genre.toLowerCase()
       )
     }
 
@@ -41,9 +41,9 @@ function App() {
     }
 
     // console.log(filteredData);
-    setMovies(filteredData)
+    setFilteredMovies(filteredData)
 
-  }, [genre, search])
+  }, [genre, search, movies])
 
 
   function handleAddMovie(e) {
@@ -58,7 +58,7 @@ function App() {
     }
     console.log(newMovie);
 
-    setMovies([...movies, newMovie])
+    setMovies([newMovie, ...movies])
   }
 
 
