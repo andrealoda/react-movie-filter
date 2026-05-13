@@ -1,66 +1,104 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from "react"
 
 
 function App() {
 
-  const allTitles = [
-    { title: 'Inception', genre: 'Fantascienza' },
-    { title: 'Il Padrino', genre: 'Thriller' },
-    { title: 'Titanic', genre: 'Romantico' },
-    { title: 'Batman', genre: 'Azione' },
-    { title: 'Interstellar', genre: 'Fantascienza' },
-    { title: 'Pulp Fiction', genre: 'Thriller' },
+  const initialMovies = [
+    { id: 1, title: 'Inception', genre: 'Fantascienza' },
+    { id: 2, title: 'Il Padrino', genre: 'Thriller' },
+    { id: 3, title: 'Titanic', genre: 'Romantico' },
+    { id: 4, title: 'Batman', genre: 'Azione' },
+    { id: 5, title: 'Interstellar', genre: 'Fantascienza' },
+    { id: 6, title: 'Pulp Fiction', genre: 'Thriller' },
   ]
 
-  const [selectedGenre, setSelectedGenre] = useState("")
-  const [filteredList, setFilteredList] = useState(allTitles)
-
-
-  function handleSelection(userSelection) {
-    setSelectedGenre(userSelection)
+  const initialFormData = {
+    title: "",
+    genre: ""
   }
 
-  useEffect(() => {
+  const [movies, setMovies] = useState(initialMovies)
+  const [genre, setGenre] = useState('')
+  const [search, setSearch] = useState('')
+  const [filteredMovies, setFilteredMovies] = useState(movies)
 
-    if (selectedGenre === "" || selectedGenre === "all") {
-      setFilteredList(allTitles)
-    } else {
-      setFilteredList(allTitles.filter(item => item.genre === selectedGenre))
+  // Form Data
+  const [formData, setFormData] = useState(initialFormData)
+
+  useEffect(() => {
+    // console.log(genre);
+    let filteredData = initialMovies
+
+    if (genre) {
+      // console.log('Filtered by genre');
+      filteredData = initialMovies.filter(movie => movie.genre.toLowerCase() == genre.toLowerCase()
+      )
     }
-  }, [selectedGenre])
+
+    if (search) {
+      console.log('searched:', search);
+      filteredData = filteredData.filter(movie => movie.title.toLowerCase().includes(search.toLowerCase()))
+    }
+
+    // console.log(filteredData);
+    setMovies(filteredData)
+
+  }, [genre, search])
+
+
+  function handleAddMovie(e) {
+    e.preventDefault()
+
+    console.log('form submitted');
+    console.log(formData);
+
+    const newMovie = {
+      id: Date.now(),
+      ...formData
+    }
+    console.log(newMovie);
+
+    setMovies([...movies, newMovie])
+  }
 
 
   return (
     <>
-      <div className="container">
 
-        <header>
-          <div className="title">
-            <h1 className='flex'>React Movie Filter</h1>
-          </div>
-        </header>
-
-        <main>
-          <h2>Choose a genre to filter the following list: </h2>
-
-          <select name="movie-genre-filter" id="movie-genre-filter" onChange={e => handleSelection(e.target.value)}>
-            <option value="">--Please choose an option--</option>
-            <option value="Fantascienza">Fantascienza</option>
-            <option value="Thriller">Thriller</option>
-            <option value="Romantico">Romantico</option>
-            <option value="Azione">Azione</option>
-            <option value="all">All titles</option>
-
-          </select>
-
-          <ul>
-            {filteredList.map(item =>
-              <li key={item.title}>{item.title}</li>
-            )}
-          </ul>
-        </main>
-
+      {/* filter by title */}
+      <div>
+        <label htmlFor="title">Title</label><br />
+        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="search a movie by title" />
       </div>
+      <hr />
+      {/* filter by genre */}
+      <div>
+        <label htmlFor="genre">Genre</label><br />
+        <select name="genre" id="genre" value={genre} onChange={(e) => setGenre(e.target.value)}>
+          <option value="">All</option>
+          <option value="fantascienza">Fantascienza</option>
+          <option value="thriller">Thriller</option>
+          <option value="romantico">Romantico</option>
+          <option value="azione">Azione</option>
+        </select>
+      </div>
+      <hr />
+      {/* form to add movies */}
+      <h2>add a new movie</h2>
+      <form onSubmit={handleAddMovie}>
+        <label htmlFor="title">Title</label><br />
+        <input type="text" placeholder="type the title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} /><br />
+        <label htmlFor="genre">Genre</label><br />
+        <input type="text" placeholder="type the genre" value={formData.genre} onChange={(e) => setFormData({ ...formData, genre: e.target.value })} /><br />
+        <button type="submit">ADD</button>
+      </form>
+
+      <h2>movies</h2>
+      {filteredMovies.map(movie => (
+        <div key={movie.id}>
+          {movie.title}
+        </div>
+      ))}
     </>
   )
 }
